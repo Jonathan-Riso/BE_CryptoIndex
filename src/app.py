@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from helpers.json_helper import convert_to_json
 from dotenv import load_dotenv
 import os
+import logging
 
 load_dotenv()
 app = Flask(__name__)
@@ -22,17 +23,57 @@ scores = client.cryptoIndex.scores
 #     document = heartbeat_collection.find_one({"_id": ObjectId(result.inserted_id)})
 #     return convert_to_json(document)
 
-@app.route("/results/<index>")
-def results(index):
-    print(index)
-    result = scores.find_one({"index": index.lower()})
-    if not result:
-        abort(404)
-    print(result)
-    # if result.time < 2 hours current
-    # Post new results
-    return Response(f"{convert_to_json(result)}", status=200, mimetype='application/json')
+@app.route("/results/<index>", methods=['GET'])
+def get_index_results(index):
+    try:
+        result = scores.find_one({"index": index.lower()})
+        if not result:
+            abort(404)
+        # if result.time < 2 hours current
+        # Post new results
+        return Response(f"{convert_to_json(result)}", status=200, mimetype='application/json')
+    except Exception as e:
+        logging.error(f"GET /results/{index} || ERROR: {e}")
+        abort(Response(e, 500))
 
-# GET Tweets
-# GET News_Reports
-# POST results
+
+
+@app.route('/tweets/<index>', methods=['GET'])
+def get_index_tweets(index):
+    try:
+        result = scores.find_one({"index": index.lower()})
+        if not result:
+            abort(404)
+        # if result.time < 2 hours current
+        # Post new results
+        return Response(f"{convert_to_json(result)}", status=200, mimetype='application/json')
+    except Exception as e:
+        logging.error(f"GET /tweets/{index} || ERROR: {e}")
+        abort(Response(e, 500))
+
+@app.route('/news/<index>', methods=['GET'])
+def get_index_news(index):
+    try:
+        result = scores.find_one({"index": index.lower()})
+        if not result:
+            abort(404)
+        # if result.time < 2 hours current
+        # Post new results
+        return Response(f"{convert_to_json(result)}", status=200, mimetype='application/json')
+    except Exception as e:
+        logging.error(f"GET /news/{index} || ERROR: {e}")
+        abort(Response(e, 500))
+
+@app.route('/reddit/<index>', methods=['GET'])
+def get_index_reddit(index):
+    try:
+        result = scores.find_one({"index": index.lower()})
+        if not result:
+            abort(404)
+        # if result.time < 2 hours current
+        # Post new results
+        return Response(f"{convert_to_json(result)}", status=200, mimetype='application/json')
+    except Exception as e:
+        logging.error(f"GET /reddit/{index} || ERROR: {e}")
+        abort(Response(e, 500))
+
