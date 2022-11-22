@@ -1,15 +1,16 @@
 from sre_constants import SUCCESS
 from flask import Flask, Response, abort
 from pymongo import MongoClient
-from bson.objectid import ObjectId
-from bson.json_util import dumps
 from helpers.json_helper import convert_to_json
-import json
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 app = Flask(__name__)
 
 # Connects to default localhost
-client = MongoClient()
+uri = os.environ.get("mongo_uri")
+client = MongoClient(uri)
 scores = client.cryptoIndex.scores
 
 # https://flask.palletsprojects.com/en/2.2.x/quickstart/
