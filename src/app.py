@@ -23,6 +23,16 @@ scores = client.cryptoIndex.scores
 #     document = heartbeat_collection.find_one({"_id": ObjectId(result.inserted_id)})
 #     return convert_to_json(document)
 
+@app.route("/", methods=['GET'])
+def get_homepage():
+    try:
+        result = list(scores.find())
+        logging.info(result)
+        return Response(f"{convert_to_json(result)}", status=200, mimetype='application/json')
+    except Exception as e:
+        logging.error(f"GET / || ERROR: {e}")
+        abort(Response(e, 500))
+
 @app.route("/results/<index>", methods=['GET'])
 def get_index_results(index):
     try:
@@ -31,7 +41,7 @@ def get_index_results(index):
             abort(404)
         # if result.time < 2 hours current
         # Post new results
-        return Response(f"{convert_to_json(result)}", status=200, mimetype='application/json')
+        return Response(f"{convert_to_json([result])}", status=200, mimetype='application/json')
     except Exception as e:
         logging.error(f"GET /results/{index} || ERROR: {e}")
         abort(Response(e, 500))
@@ -46,7 +56,7 @@ def get_index_tweets(index):
             abort(404)
         # if result.time < 2 hours current
         # Post new results
-        return Response(f"{convert_to_json(result)}", status=200, mimetype='application/json')
+        return Response(f"{convert_to_json([result])}", status=200, mimetype='application/json')
     except Exception as e:
         logging.error(f"GET /tweets/{index} || ERROR: {e}")
         abort(Response(e, 500))
@@ -59,7 +69,7 @@ def get_index_news(index):
             abort(404)
         # if result.time < 2 hours current
         # Post new results
-        return Response(f"{convert_to_json(result)}", status=200, mimetype='application/json')
+        return Response(f"{convert_to_json([result])}", status=200, mimetype='application/json')
     except Exception as e:
         logging.error(f"GET /news/{index} || ERROR: {e}")
         abort(Response(e, 500))
@@ -72,7 +82,7 @@ def get_index_reddit(index):
             abort(404)
         # if result.time < 2 hours current
         # Post new results
-        return Response(f"{convert_to_json(result)}", status=200, mimetype='application/json')
+        return Response(f"{convert_to_json([result])}", status=200, mimetype='application/json')
     except Exception as e:
         logging.error(f"GET /reddit/{index} || ERROR: {e}")
         abort(Response(e, 500))
