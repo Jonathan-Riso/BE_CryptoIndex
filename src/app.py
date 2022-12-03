@@ -1,5 +1,5 @@
 from sre_constants import SUCCESS
-from flask import Flask, Response, abort
+from flask import Flask, Response, abort, url_for
 from pymongo import MongoClient
 from helpers.json_helper import convert_to_json
 from calculations.index import calc_index
@@ -29,6 +29,7 @@ scores = client.cryptoIndex.scores
 @app.route("/", methods=['GET'])
 def get_homepage():
     try:
+        
         result = list(scores.find())
         logging.info(result)
         return Response(f"{convert_to_json(result)}", status=200, mimetype='application/json')
@@ -117,3 +118,6 @@ def recalculate(result):
         return True
     else:
         return False
+
+if __name__=="__main":
+	app.run()
