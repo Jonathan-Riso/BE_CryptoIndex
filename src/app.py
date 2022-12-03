@@ -42,13 +42,12 @@ def get_index_results(index):
     try:
         result = scores.find_one({"index": index.lower()})
         if not result:
-            scores.insert_one(calc_index(index))
+            scores.insert_one(calc_index(index.lower()))
             result = scores.find_one({"index": index.lower()})
             # abort(404)
         
         if recalculate(result) is True:
-            scores.update_one({'index': index.lower()}, calc_index(index))
-            result = scores.find_one({"index": index.lower()})            
+            replace_old_index(index.lower())
         
         return Response(f"{convert_to_json([result])}", status=200, mimetype='application/json')
 
@@ -66,8 +65,7 @@ def get_index_tweets(index):
             abort(404)
         
         if recalculate(result) is True:
-            scores.update_one({'index': index.lower()}, calc_index(index))
-            result = scores.find_one({"index": index.lower()})            
+            replace_old_index(index.lower())
         
         tweets = result.get('twitter')
 
@@ -84,8 +82,7 @@ def get_index_news(index):
             abort(404)
         
         if recalculate(result) is True:
-            scores.update_one({'index': index.lower()}, calc_index(index))
-            result = scores.find_one({"index": index.lower()})            
+            replace_old_index(index.lower())
         
         news = result.get('news')
 
@@ -102,8 +99,7 @@ def get_index_reddit(index):
             abort(404)
         
         if recalculate(result) is True:
-            scores.update_one({'index': index.lower()}, calc_index(index))
-            result = scores.find_one({"index": index.lower()})            
+            replace_old_index(index.lower())
         
         posts = result.get('reddit')
 
@@ -118,6 +114,9 @@ def recalculate(result):
         return True
     else:
         return False
+
+def replace_old_index(index):
+    return scores.find_one_and_replace({"index": index.lower()}, calc_index(index.lower())) 
 
 if __name__=="__main":
 	app.run()
