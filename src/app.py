@@ -47,7 +47,7 @@ def get_index_results(index):
             # abort(404)
         
         if recalculate(result) is True:
-            scores.insert_one(calc_index(index))
+            scores.update_one({'index': index.lower()}, calc_index(index))
             result = scores.find_one({"index": index.lower()})            
         
         return Response(f"{convert_to_json([result])}", status=200, mimetype='application/json')
@@ -66,7 +66,7 @@ def get_index_tweets(index):
             abort(404)
         
         if recalculate(result) is True:
-            scores.insert_one(calc_index(index))
+            scores.update_one({'index': index.lower()}, calc_index(index))
             result = scores.find_one({"index": index.lower()})            
         
         tweets = result.get('twitter')
@@ -84,7 +84,7 @@ def get_index_news(index):
             abort(404)
         
         if recalculate(result) is True:
-            scores.insert_one(calc_index(index))
+            scores.update_one({'index': index.lower()}, calc_index(index))
             result = scores.find_one({"index": index.lower()})            
         
         news = result.get('news')
@@ -102,7 +102,7 @@ def get_index_reddit(index):
             abort(404)
         
         if recalculate(result) is True:
-            scores.insert_one(calc_index(index))
+            scores.update_one({'index': index.lower()}, calc_index(index))
             result = scores.find_one({"index": index.lower()})            
         
         posts = result.get('reddit')
